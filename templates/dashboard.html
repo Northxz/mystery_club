@@ -3,284 +3,126 @@
 {% block title %}Dashboard - Mystery Club{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4 text-gradient">
-                <i class="fas fa-tachometer-alt me-2"></i>Mystery Club Dashboard
-            </h1>
-            <p class="lead mb-4">Welcome to your club management center. Here's what's happening:</p>
-        </div>
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+        </h1>
     </div>
+</div>
 
-    <!-- Quick Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card bg-success">
-                <div class="card-body text-center">
-                    <i class="fas fa-users icon-lg mb-2"></i>
-                    <h3 class="mb-1">{{ members_count }}</h3>
-                    <p class="mb-0">Active Members</p>
-                    <a href="{{ url_for('attendance') }}" class="btn btn-light btn-sm mt-2">
-                        <i class="fas fa-eye me-1"></i>View
-                    </a>
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Attendance</h5>
+                        <p class="card-text">Manage member attendance</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card bg-info">
-                <div class="card-body text-center">
-                    <i class="fas fa-balance-scale icon-lg mb-2"></i>
-                    <h3 class="mb-1">${{ "%.2f"|format(financial_summary.balance) }}</h3>
-                    <p class="mb-0">Club Balance</p>
-                    <a href="{{ url_for('finances') }}" class="btn btn-light btn-sm mt-2">
-                        <i class="fas fa-eye me-1"></i>View
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card bg-warning">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar icon-lg mb-2"></i>
-                    <h3 class="mb-1">{{ recent_events|length }}</h3>
-                    <p class="mb-0">Upcoming Events</p>
-                    <a href="{{ url_for('events') }}" class="btn btn-light btn-sm mt-2">
-                        <i class="fas fa-eye me-1"></i>View
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card dashboard-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <div class="card-body text-center">
-                    <i class="fas fa-tasks icon-lg mb-2"></i>
-                    <h3 class="mb-1">{{ pending_todos }}</h3>
-                    <p class="mb-0">Pending Goals</p>
-                    <a href="{{ url_for('todo') }}" class="btn btn-light btn-sm mt-2">
-                        <i class="fas fa-eye me-1"></i>View
-                    </a>
-                </div>
+                <a href="{{ url_for('attendance') }}" class="btn btn-light btn-sm">View Details</a>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <!-- Recent Events -->
-        <div class="col-md-6 mb-4">
-            <div class="card fade-in-up">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fas fa-calendar-alt me-2"></i>Upcoming Events
-                    </h5>
-                    <a href="{{ url_for('events') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-plus me-1"></i>Add Event
-                    </a>
-                </div>
-                <div class="card-body">
-                    {% if recent_events %}
-                        {% for event in recent_events %}
-                        <div class="d-flex align-items-center mb-3 p-2 border-start border-primary border-3">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1 fw-bold">{{ event['Event Name'] }}</h6>
-                                <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>{{ event['Date'] }}
-                                    <i class="fas fa-clock ms-2 me-1"></i>{{ event['Time'] }}
-                                </small>
-                                <br>
-                                <small class="text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ event['Location'] }}
-                                </small>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge bg-primary">{{ event['Date'] }}</span>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center py-3">
-                            <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
-                            <p class="text-muted mb-0">No upcoming events scheduled.</p>
-                            <a href="{{ url_for('events') }}" class="btn btn-primary btn-sm mt-2">
-                                <i class="fas fa-plus me-1"></i>Schedule First Event
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Financial Overview -->
-        <div class="col-md-6 mb-4">
-            <div class="card fade-in-up">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fas fa-chart-line me-2"></i>Financial Overview
-                    </h5>
-                    <a href="{{ url_for('finances') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-plus me-1"></i>Add Record
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="border-end">
-                                <h5 class="text-success mb-1">${{ "%.0f"|format(financial_summary.total_income) }}</h5>
-                                <small class="text-muted">Income</small>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="border-end">
-                                <h5 class="text-danger mb-1">${{ "%.0f"|format(financial_summary.total_expenses) }}</h5>
-                                <small class="text-muted">Expenses</small>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <h5 class="{% if financial_summary.balance >= 0 %}text-success{% else %}text-danger{% endif %} mb-1">
-                                ${{ "%.0f"|format(financial_summary.balance) }}
-                            </h5>
-                            <small class="text-muted">Balance</small>
-                        </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Finances</h5>
+                        <p class="card-text">Track income & expenses</p>
                     </div>
-                    
-                    {% if financial_summary.records %}
-                    <div class="mt-3">
-                        <h6 class="mb-2">Recent Transactions</h6>
-                        {% for record in financial_summary.records[-3:] %}
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <small class="fw-bold">{{ record['Description'][:30] }}{% if record['Description']|length > 30 %}...{% endif %}</small>
-                                <br>
-                                <small class="text-muted">{{ record['Date'] }} • {{ record['Category'] }}</small>
-                            </div>
-                            <span class="{% if record['Type'] == 'Income' %}text-success{% else %}text-danger{% endif %} fw-bold">
-                                {% if record['Type'] == 'Income' %}+{% else %}-{% endif %}${{ "%.2f"|format(record['Amount']|float) }}
-                            </span>
-                        </div>
-                        {% endfor %}
+                    <div class="align-self-center">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
                     </div>
-                    {% else %}
-                        <div class="text-center py-3 mt-3">
-                            <i class="fas fa-chart-line fa-2x text-muted mb-2"></i>
-                            <p class="text-muted mb-0">No financial records yet.</p>
-                            <a href="{{ url_for('finances') }}" class="btn btn-primary btn-sm mt-2">
-                                <i class="fas fa-plus me-1"></i>Add First Record
-                            </a>
-                        </div>
-                    {% endif %}
                 </div>
+                <a href="{{ url_for('finances') }}" class="btn btn-light btn-sm">View Details</a>
             </div>
         </div>
     </div>
-
-    <!-- Quick Actions -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card fade-in-up">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-bolt me-2"></i>Quick Actions
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <a href="{{ url_for('attendance') }}" class="btn btn-outline-primary w-100">
-                                <i class="fas fa-user-check me-2"></i>Record Attendance
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <a href="{{ url_for('finances') }}" class="btn btn-outline-success w-100">
-                                <i class="fas fa-plus-circle me-2"></i>Add Transaction
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <a href="{{ url_for('events') }}" class="btn btn-outline-warning w-100">
-                                <i class="fas fa-calendar-plus me-2"></i>Schedule Event
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <a href="{{ url_for('todo') }}" class="btn btn-outline-info w-100">
-                                <i class="fas fa-bullseye me-2"></i>Set Goal
-                            </a>
-                        </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Events</h5>
+                        <p class="card-text">Plan & manage events</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-calendar fa-2x"></i>
                     </div>
                 </div>
+                <a href="{{ url_for('events') }}" class="btn btn-light btn-sm">View Details</a>
             </div>
         </div>
     </div>
-
-    <!-- Club Statistics -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card fade-in-up">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-chart-bar me-2"></i>Club Statistics
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-users fa-2x text-primary mb-2"></i>
-                                <h4 class="mb-1">{{ members_count }}</h4>
-                                <small class="text-muted">Total Members</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
-                                <h4 class="mb-1">{{ recent_events|length }}</h4>
-                                <small class="text-muted">Events Planned</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-dollar-sign fa-2x text-warning mb-2"></i>
-                                <h4 class="mb-1">{{ financial_summary.records|length }}</h4>
-                                <small class="text-muted">Transactions</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-tasks fa-2x text-info mb-2"></i>
-                                <h4 class="mb-1">{{ pending_todos }}</h4>
-                                <small class="text-muted">Active Goals</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-chart-line fa-2x text-danger mb-2"></i>
-                                <h4 class="mb-1">${{ "%.0f"|format(financial_summary.balance) }}</h4>
-                                <small class="text-muted">Current Balance</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="stat-item">
-                                <i class="fas fa-star fa-2x text-secondary mb-2"></i>
-                                <h4 class="mb-1">A+</h4>
-                                <small class="text-muted">Club Rating</small>
-                            </div>
-                        </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Reports</h5>
+                        <p class="card-text">Download CSV files</p>
                     </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-download fa-2x"></i>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Download
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('download_attendance') }}">Attendance</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_members') }}">Members</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_finances') }}">Finances</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_events') }}">Events</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-.stat-item {
-    padding: 1rem;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.stat-item:hover {
-    background: rgba(111, 66, 193, 0.1);
-    transform: translateY(-5px);
-}
-</style>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Quick Start Guide
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Getting Started:</h6>
+                        <ul>
+                            <li>Add club members in the Attendance section</li>
+                            <li>Log attendance for meetings and activities</li>
+                            <li>Track income and expenses in Finances</li>
+                            <li>Plan upcoming events in the Events section</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Data Management:</h6>
+                        <ul>
+                            <li>All data is stored in CSV files</li>
+                            <li>Download reports for Excel analysis</li>
+                            <li>Data persists between sessions</li>
+                            <li>Easy backup and restore capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 

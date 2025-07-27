@@ -3,247 +3,150 @@
 {% block title %}Finances - Mystery Club{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4 text-gradient">
-                <i class="fas fa-dollar-sign me-2"></i>Financial Management
-            </h1>
-        </div>
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-dollar-sign me-2"></i>Financial Management
+        </h1>
     </div>
+</div>
 
-    <!-- Financial Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card dashboard-card bg-success">
-                <div class="card-body text-center">
-                    <i class="fas fa-arrow-up icon-lg mb-2"></i>
-                    <h3 class="mb-1">${{ "%.2f"|format(summary.total_income) }}</h3>
-                    <p class="mb-0">Total Income</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card dashboard-card bg-warning">
-                <div class="card-body text-center">
-                    <i class="fas fa-arrow-down icon-lg mb-2"></i>
-                    <h3 class="mb-1">${{ "%.2f"|format(summary.total_expenses) }}</h3>
-                    <p class="mb-0">Total Expenses</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card dashboard-card {% if summary.balance >= 0 %}bg-info{% else %}bg-danger{% endif %}">
-                <div class="card-body text-center">
-                    <i class="fas fa-balance-scale icon-lg mb-2"></i>
-                    <h3 class="mb-1">${{ "%.2f"|format(summary.balance) }}</h3>
-                    <p class="mb-0">Balance</p>
-                </div>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h5>Total Income</h5>
+                <h2>${{ "%.2f"|format(summary.total_income) }}</h2>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card slide-in-right">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-plus me-2"></i>Add Financial Record
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('add_financial_record_route') }}" id="financialForm">
-                        <div class="mb-3">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Type</label>
-                            <select class="form-select" id="type" name="type" required>
-                                <option value="">Select type</option>
-                                <option value="Income">Income</option>
-                                <option value="Expense">Expense</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="category" class="form-label">Category</label>
-                            <select class="form-select" id="category" name="category" required>
-                                <option value="">Select category</option>
-                                <!-- Income categories -->
-                                <optgroup label="Income Categories" id="income-categories" style="display: none;">
-                                    <option value="Membership Fees">Membership Fees</option>
-                                    <option value="Fundraising">Fundraising</option>
-                                    <option value="Donations">Donations</option>
-                                    <option value="Event Revenue">Event Revenue</option>
-                                    <option value="Other Income">Other Income</option>
-                                </optgroup>
-                                <!-- Expense categories -->
-                                <optgroup label="Expense Categories" id="expense-categories" style="display: none;">
-                                    <option value="Event Costs">Event Costs</option>
-                                    <option value="Supplies">Supplies</option>
-                                    <option value="Food & Beverages">Food & Beverages</option>
-                                    <option value="Venue Rental">Venue Rental</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Equipment">Equipment</option>
-                                    <option value="Other Expenses">Other Expenses</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Amount</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" class="form-control" id="amount" name="amount" 
-                                       step="0.01" min="0.01" required>
-                            </div>
-                            <div class="invalid-feedback">
-                                Please enter a valid positive amount.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" 
-                                      rows="2" placeholder="Brief description of the transaction" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i>Add Record
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="card slide-in-right">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-chart-pie me-2"></i>Financial Overview
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="financialChart"></canvas>
-                    </div>
-                </div>
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h5>Total Expenses</h5>
+                <h2>${{ "%.2f"|format(summary.total_expenses) }}</h2>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card fade-in-up">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Financial Records
-                    </h5>
-                    <a href="{{ url_for('download_finances') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-download me-1"></i>Download CSV
-                    </a>
-                </div>
-                <div class="card-body">
-                    {% if summary.records %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th width="100">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for record in summary.records %}
-                                <tr>
-                                    <td>{{ record['Date'] }}</td>
-                                    <td>
-                                        {% if record['Type'] == 'Income' %}
-                                            <span class="badge bg-success">
-                                                <i class="fas fa-arrow-up me-1"></i>Income
-                                            </span>
-                                        {% else %}
-                                            <span class="badge bg-danger">
-                                                <i class="fas fa-arrow-down me-1"></i>Expense
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ record['Category'] }}</td>
-                                    <td>
-                                        {% if record['Type'] == 'Income' %}
-                                            <span class="amount-income">+${{ "%.2f"|format(record['Amount']|float) }}</span>
-                                        {% else %}
-                                            <span class="amount-expense">-${{ "%.2f"|format(record['Amount']|float) }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ record['Description'] }}</td>
-                                    <td>
-                                        <form method="POST" action="{{ url_for('delete_financial_record', record_id=record['ID']) }}" 
-                                              style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this financial record?')">
-                                            <button type="submit" class="btn btn-delete" title="Delete Record">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">No financial records yet. Add your first transaction above!</p>
-                    </div>
-                    {% endif %}
-                </div>
+    <div class="col-md-4">
+        <div class="card {% if summary.balance >= 0 %}bg-primary{% else %}bg-warning{% endif %} text-white">
+            <div class="card-body text-center">
+                <h5>Current Balance</h5>
+                <h2>${{ "%.2f"|format(summary.balance) }}</h2>
             </div>
         </div>
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Add Financial Record
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_financial_record_route') }}">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="">Select type</option>
+                            <option value="Income">Income</option>
+                            <option value="Expense">Expense</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" placeholder="e.g., Fundraising, Supplies, Food" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Add Record
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Financial Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="financialChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Financial Records
+                </h5>
+                <a href="{{ url_for('download_finances') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-download me-1"></i>Download CSV
+                </a>
+            </div>
+            <div class="card-body">
+                {% if summary.records %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in summary.records %}
+                            <tr>
+                                <td>{{ record['Date'] }}</td>
+                                <td>
+                                    <span class="badge {% if record['Type'] == 'Income' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ record['Type'] }}
+                                    </span>
+                                </td>
+                                <td>{{ record['Category'] }}</td>
+                                <td>${{ "%.2f"|format(record['Amount']|float) }}</td>
+                                <td>{{ record['Description'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No financial records yet. Add your first record above!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
 <script>
-// Set today's date as default
-document.getElementById('date').valueAsDate = new Date();
-
-// Dynamic category selection based on type
-document.getElementById('type').addEventListener('change', function() {
-    const incomeCategories = document.getElementById('income-categories');
-    const expenseCategories = document.getElementById('expense-categories');
-    const categorySelect = document.getElementById('category');
-    
-    // Reset category selection
-    categorySelect.value = '';
-    
-    if (this.value === 'Income') {
-        incomeCategories.style.display = 'block';
-        expenseCategories.style.display = 'none';
-    } else if (this.value === 'Expense') {
-        incomeCategories.style.display = 'none';
-        expenseCategories.style.display = 'block';
-    } else {
-        incomeCategories.style.display = 'none';
-        expenseCategories.style.display = 'none';
-    }
-});
-
-// Form validation
-document.getElementById('financialForm').addEventListener('submit', function(e) {
-    const amount = parseFloat(document.getElementById('amount').value);
-    const amountInput = document.getElementById('amount');
-    
-    if (isNaN(amount) || amount <= 0) {
-        e.preventDefault();
-        amountInput.classList.add('is-invalid');
-        showToast('Please enter a valid positive amount!', 'error');
-        return false;
-    } else {
-        amountInput.classList.remove('is-invalid');
-    }
-});
-
-// Load and display financial chart
+// Load financial data and create chart
 fetch('/api/financial_data')
     .then(response => response.json())
     .then(data => {
@@ -251,39 +154,37 @@ fetch('/api/financial_data')
         
         // Prepare data for pie chart
         const labels = [];
-        const chartData = [];
-        const backgroundColors = [];
+        const amounts = [];
+        const colors = [];
         
         // Add income categories
         Object.entries(data.income_by_category).forEach(([category, amount]) => {
-            labels.push(`${category} (Income)`);
-            chartData.push(amount);
-            backgroundColors.push('rgba(40, 167, 69, 0.8)');
+            labels.push(`Income: ${category}`);
+            amounts.push(amount);
+            colors.push('#28a745');
         });
         
         // Add expense categories
         Object.entries(data.expense_by_category).forEach(([category, amount]) => {
-            labels.push(`${category} (Expense)`);
-            chartData.push(amount);
-            backgroundColors.push('rgba(220, 53, 69, 0.8)');
+            labels.push(`Expense: ${category}`);
+            amounts.push(amount);
+            colors.push('#dc3545');
         });
         
         if (labels.length === 0) {
-            // Show placeholder when no data
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#6c757d';
-            ctx.textAlign = 'center';
-            ctx.fillText('No financial data yet', ctx.canvas.width / 2, ctx.canvas.height / 2);
-            return;
+            // Show placeholder if no data
+            labels.push('No data yet');
+            amounts.push(1);
+            colors.push('#6c757d');
         }
         
         new Chart(ctx, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
-                    data: chartData,
-                    backgroundColor: backgroundColors,
+                    data: amounts,
+                    backgroundColor: colors,
                     borderWidth: 2,
                     borderColor: '#fff'
                 }]
@@ -293,18 +194,7 @@ fetch('/api/financial_data')
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': $' + context.parsed.toFixed(2);
-                            }
-                        }
+                        position: 'bottom'
                     }
                 }
             }
