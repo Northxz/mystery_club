@@ -103,38 +103,38 @@
                     {% if todos %}
                     <div class="todo-list">
                         {% for todo in todos %}
-                        <div class="todo-item {% if todo['Completed'] == 'True' %}completed{% endif %}" 
-                             data-todo-id="{{ todo['ID'] }}">
+                        <div class="todo-item {% if todo.get('Completed') == 'True' %}completed{% endif %}" 
+                             data-todo-id="{{ todo.get('ID', '') }}">
                             <div class="d-flex align-items-center">
-                                <form method="POST" action="{{ url_for('toggle_todo', todo_id=todo['ID']) }}" 
+                                <form method="POST" action="{{ url_for('toggle_todo', todo_id=todo.get('ID', '')) }}" 
                                       style="display: inline;" class="me-3">
                                     <input type="checkbox" class="todo-checkbox" 
-                                           {% if todo['Completed'] == 'True' %}checked{% endif %}
+                                           {% if todo.get('Completed') == 'True' %}checked{% endif %}
                                            onchange="this.form.submit()">
                                 </form>
                                 
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1 {% if todo['Completed'] == 'True' %}text-decoration-line-through{% endif %}">
-                                        {{ todo['Title'] }}
+                                    <h6 class="mb-1 {% if todo.get('Completed') == 'True' %}text-decoration-line-through{% endif %}">
+                                        {{ todo.get('Title', 'Untitled Goal') }}
                                     </h6>
                                     <div class="d-flex align-items-center text-muted small">
                                         <i class="fas fa-calendar-plus me-1"></i>
-                                        Created: {{ todo['Created Date'] }}
-                                        {% if todo['Due Date'] %}
+                                        Created: {{ todo.get('Created Date', 'Unknown') }}
+                                        {% if todo.get('Due Date') %}
                                             <i class="fas fa-calendar-check ms-3 me-1"></i>
-                                            Due: {{ todo['Due Date'] }}
-                                            {% set due_date = todo['Due Date'] %}
+                                            Due: {{ todo.get('Due Date') }}
+                                            {% set due_date = todo.get('Due Date') %}
                                             {% set today = moment().format('YYYY-MM-DD') %}
-                                            {% if due_date < today and todo['Completed'] == 'False' %}
+                                            {% if due_date and due_date < today and todo.get('Completed') == 'False' %}
                                                 <span class="badge bg-danger ms-2">Overdue</span>
-                                            {% elif due_date == today and todo['Completed'] == 'False' %}
+                                            {% elif due_date and due_date == today and todo.get('Completed') == 'False' %}
                                                 <span class="badge bg-warning ms-2">Due Today</span>
                                             {% endif %}
                                         {% endif %}
                                     </div>
                                 </div>
                                 
-                                <form method="POST" action="{{ url_for('delete_todo', todo_id=todo['ID']) }}" 
+                                <form method="POST" action="{{ url_for('delete_todo', todo_id=todo.get('ID', '')) }}" 
                                       style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this goal?')">
                                     <button type="submit" class="btn btn-delete" title="Delete Goal">
                                         <i class="fas fa-trash"></i>

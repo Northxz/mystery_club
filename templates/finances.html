@@ -146,20 +146,22 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th width="100">Actions</th>
+                                    <th class="col-date">Date</th>
+                                    <th class="col-status">Type</th>
+                                    <th class="col-name">Category</th>
+                                    <th class="col-amount">Amount</th>
+                                    <th class="col-description">Description</th>
+                                    <th class="col-actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for record in summary.records %}
                                 <tr>
-                                    <td>{{ record['Date'] }}</td>
-                                    <td>
-                                        {% if record['Type'] == 'Income' %}
+                                    <td class="col-date" data-label="Date">
+                                        {{ record.get('Date', 'Unknown') }}
+                                    </td>
+                                    <td class="col-status" data-label="Type">
+                                        {% if record.get('Type') == 'Income' %}
                                             <span class="badge bg-success">
                                                 <i class="fas fa-arrow-up me-1"></i>Income
                                             </span>
@@ -169,17 +171,21 @@
                                             </span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ record['Category'] }}</td>
-                                    <td>
-                                        {% if record['Type'] == 'Income' %}
-                                            <span class="amount-income">+${{ "%.2f"|format(record['Amount']|float) }}</span>
+                                    <td class="col-name" data-label="Category">
+                                        {{ record.get('Category', 'Unknown') }}
+                                    </td>
+                                    <td class="col-amount" data-label="Amount">
+                                        {% if record.get('Type') == 'Income' %}
+                                            <span class="amount-income">+${{ "%.2f"|format(record.get('Amount', 0)|float) }}</span>
                                         {% else %}
-                                            <span class="amount-expense">-${{ "%.2f"|format(record['Amount']|float) }}</span>
+                                            <span class="amount-expense">-${{ "%.2f"|format(record.get('Amount', 0)|float) }}</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ record['Description'] }}</td>
-                                    <td>
-                                        <form method="POST" action="{{ url_for('delete_financial_record', record_id=record['ID']) }}" 
+                                    <td class="col-description" data-label="Description">
+                                        {{ record.get('Description', 'No description') }}
+                                    </td>
+                                    <td class="col-actions" data-label="Actions">
+                                        <form method="POST" action="{{ url_for('delete_financial_record', record_id=record.get('ID', '')) }}" 
                                               style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this financial record?')">
                                             <button type="submit" class="btn btn-delete" title="Delete Record">
                                                 <i class="fas fa-trash"></i>
