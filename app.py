@@ -582,18 +582,10 @@ def delete_member(member_id):
     try:
         fieldnames = ['ID', 'Member Name', 'Email', 'Join Date']
         if delete_record_by_id(MEMBERS_CSV, member_id, fieldnames):
-            # Get updated records to display
-            updated_records = get_members()
-            return render_template('delete_success.html', 
-                                 message='Member deleted successfully!',
-                                 data_type='Members',
-                                 records=updated_records,
-                                 headers=['Member Name', 'Email', 'Join Date'],
-                                 redirect_url=url_for('attendance'),
-                                 download_url=url_for('download_members'))
+            flash('Member deleted successfully!', 'success')
         else:
             flash('Error deleting member!', 'error')
-            return redirect(url_for('attendance'))
+        return redirect(url_for('attendance'))
     except Exception as e:
         logger.error(f"Error deleting member {member_id}: {str(e)}")
         logger.error(traceback.format_exc())
@@ -606,18 +598,10 @@ def delete_attendance_record(record_id):
     try:
         fieldnames = ['ID', 'Date', 'Member Name', 'Session Name', 'Hours', 'Status', 'Notes']
         if delete_record_by_id(ATTENDANCE_CSV, record_id, fieldnames):
-            # Get updated records to display
-            updated_records = get_attendance_records()
-            return render_template('delete_success.html', 
-                                 message='Attendance record deleted successfully!',
-                                 data_type='Attendance Records',
-                                 records=updated_records,
-                                 headers=['Date', 'Member Name', 'Session Name', 'Hours', 'Status', 'Notes'],
-                                 redirect_url=url_for('attendance'),
-                                 download_url=url_for('download_attendance'))
+            flash('Attendance record deleted successfully!', 'success')
         else:
             flash('Error deleting attendance record!', 'error')
-            return redirect(url_for('attendance'))
+        return redirect(url_for('attendance'))
     except Exception as e:
         logger.error(f"Error deleting attendance record {record_id}: {str(e)}")
         logger.error(traceback.format_exc())
@@ -630,18 +614,10 @@ def delete_financial_record(record_id):
     try:
         fieldnames = ['ID', 'Date', 'Type', 'Category', 'Amount', 'Description']
         if delete_record_by_id(FINANCES_CSV, record_id, fieldnames):
-            # Get updated records to display
-            updated_records = get_financial_records()
-            return render_template('delete_success.html', 
-                                 message='Financial record deleted successfully!',
-                                 data_type='Financial Records',
-                                 records=updated_records,
-                                 headers=['Date', 'Type', 'Category', 'Amount', 'Description'],
-                                 redirect_url=url_for('finances'),
-                                 download_url=url_for('download_finances'))
+            flash('Financial record deleted successfully!', 'success')
         else:
             flash('Error deleting financial record!', 'error')
-            return redirect(url_for('finances'))
+        return redirect(url_for('finances'))
     except Exception as e:
         logger.error(f"Error deleting financial record {record_id}: {str(e)}")
         logger.error(traceback.format_exc())
@@ -654,18 +630,10 @@ def delete_event(event_id):
     try:
         fieldnames = ['ID', 'Event Name', 'Date', 'Time', 'Location', 'Description']
         if delete_record_by_id(EVENTS_CSV, event_id, fieldnames):
-            # Get updated records to display
-            updated_records = get_events()
-            return render_template('delete_success.html', 
-                                 message='Event deleted successfully!',
-                                 data_type='Events',
-                                 records=updated_records,
-                                 headers=['Event Name', 'Date', 'Time', 'Location', 'Description'],
-                                 redirect_url=url_for('events'),
-                                 download_url=url_for('download_events'))
+            flash('Event deleted successfully!', 'success')
         else:
             flash('Error deleting event!', 'error')
-            return redirect(url_for('events'))
+        return redirect(url_for('events'))
     except Exception as e:
         logger.error(f"Error deleting event {event_id}: {str(e)}")
         logger.error(traceback.format_exc())
@@ -678,18 +646,10 @@ def delete_todo(todo_id):
     try:
         fieldnames = ['ID', 'Title', 'Due Date', 'Completed', 'Created Date']
         if delete_record_by_id(TODO_CSV, todo_id, fieldnames):
-            # Get updated records to display
-            updated_records = get_todos()
-            return render_template('delete_success.html', 
-                                 message='Goal deleted successfully!',
-                                 data_type='Goals',
-                                 records=updated_records,
-                                 headers=['Title', 'Due Date', 'Completed', 'Created Date'],
-                                 redirect_url=url_for('todo'),
-                                 download_url=url_for('download_todos'))
+            flash('Goal deleted successfully!', 'success')
         else:
             flash('Error deleting goal!', 'error')
-            return redirect(url_for('todo'))
+        return redirect(url_for('todo'))
     except Exception as e:
         logger.error(f"Error deleting todo {todo_id}: {str(e)}")
         logger.error(traceback.format_exc())
