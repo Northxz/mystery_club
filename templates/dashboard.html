@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mystery Club{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Attendance</h5>
+                        <p class="card-text">Manage member attendance</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+                <a href="{{ url_for('attendance') }}" class="btn btn-light btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Finances</h5>
+                        <p class="card-text">Track income & expenses</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+                <a href="{{ url_for('finances') }}" class="btn btn-light btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Events</h5>
+                        <p class="card-text">Plan & manage events</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-calendar fa-2x"></i>
+                    </div>
+                </div>
+                <a href="{{ url_for('events') }}" class="btn btn-light btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Reports</h5>
+                        <p class="card-text">Download CSV files</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-download fa-2x"></i>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Download
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('download_attendance') }}">Attendance</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_members') }}">Members</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_finances') }}">Finances</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('download_events') }}">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Quick Start Guide
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Getting Started:</h6>
+                        <ul>
+                            <li>Add club members in the Attendance section</li>
+                            <li>Log attendance for meetings and activities</li>
+                            <li>Track income and expenses in Finances</li>
+                            <li>Plan upcoming events in the Events section</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Data Management:</h6>
+                        <ul>
+                            <li>All data is stored in CSV files</li>
+                            <li>Download reports for Excel analysis</li>
+                            <li>Data persists between sessions</li>
+                            <li>Easy backup and restore capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

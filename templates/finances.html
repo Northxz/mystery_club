@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Finances - Mystery Club{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-dollar-sign me-2"></i>Financial Management
+        </h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h5>Total Income</h5>
+                <h2>${{ "%.2f"|format(summary.total_income) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h5>Total Expenses</h5>
+                <h2>${{ "%.2f"|format(summary.total_expenses) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card {% if summary.balance >= 0 %}bg-primary{% else %}bg-warning{% endif %} text-white">
+            <div class="card-body text-center">
+                <h5>Current Balance</h5>
+                <h2>${{ "%.2f"|format(summary.balance) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Add Financial Record
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_financial_record_route') }}">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="">Select type</option>
+                            <option value="Income">Income</option>
+                            <option value="Expense">Expense</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" placeholder="e.g., Fundraising, Supplies, Food" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Add Record
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Financial Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="financialChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Financial Records
+                </h5>
+                <a href="{{ url_for('download_finances') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-download me-1"></i>Download CSV
+                </a>
+            </div>
+            <div class="card-body">
+                {% if summary.records %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in summary.records %}
+                            <tr>
+                                <td>{{ record['Date'] }}</td>
+                                <td>
+                                    <span class="badge {% if record['Type'] == 'Income' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ record['Type'] }}
+                                    </span>
+                                </td>
+                                <td>{{ record['Category'] }}</td>
+                                <td>${{ "%.2f"|format(record['Amount']|float) }}</td>
+                                <td>{{ record['Description'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No financial records yet. Add your first record above!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Load financial data and create chart
+fetch('/api/financial_data')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('financialChart').getContext('2d');
+        
+        // Prepare data for pie chart
+        const labels = [];
+        const amounts = [];
+        const colors = [];
+        
+        // Add income categories
+        Object.entries(data.income_by_category).forEach(([category, amount]) => {
+            labels.push(`Income: ${category}`);
+            amounts.push(amount);
+            colors.push('#28a745');
+        });
+        
+        // Add expense categories
+        Object.entries(data.expense_by_category).forEach(([category, amount]) => {
+            labels.push(`Expense: ${category}`);
+            amounts.push(amount);
+            colors.push('#dc3545');
+        });
+        
+        if (labels.length === 0) {
+            // Show placeholder if no data
+            labels.push('No data yet');
+            amounts.push(1);
+            colors.push('#6c757d');
+        }
+        
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: amounts,
+                    backgroundColor: colors,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error loading financial data:', error);
+    });
+</script>
+{% endblock %}
+
